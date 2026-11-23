@@ -11,7 +11,7 @@ vim.cmd("filetype plugin indent on")
 vim.cmd("syntax enable")
 ```
 
-No compiler or language server is started. `.pooka` and `.spec.pooka` use the same filetype.
+`.pooka` and `.spec.pooka` use the same filetype.
 
 ## Tree-sitter
 
@@ -22,6 +22,21 @@ On Neovim 0.10+, with Git, the Tree-sitter CLI and a C compiler installed:
 ```
 
 This fetches its own pinned [tree-sitter-pooka](https://github.com/pooka-lang/tree-sitter-pooka) revision into Neovim's data directory and compiles the parser. Restart Neovim afterwards. No neighbouring source checkout is used. Without the parser, the regex fallback still works.
+
+## Language server
+
+On Neovim 0.11+, install a compiler build that includes `pooka lsp` and add this to your configuration:
+
+```lua
+vim.lsp.config("pooka", {
+  cmd = { "pooka", "lsp" },
+  filetypes = { "pooka" },
+  root_markers = { "pooka.toml" },
+})
+vim.lsp.enable("pooka")
+```
+
+If needed, replace the first `cmd` element with the absolute compiler path. Open a Pooka file under `pooka.toml` and run `:checkhealth vim.lsp` to check the connection. Use `vim.lsp.buf.definition()` to navigate and `vim.lsp.buf.format()` to format. If dependencies are missing, run `pooka deps download` in the project and save a Pooka file.
 
 ## Development
 
